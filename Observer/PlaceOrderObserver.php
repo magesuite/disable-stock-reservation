@@ -2,7 +2,7 @@
 
 namespace MageSuite\DisableStockReservation\Observer;
 
-class SourceDeductionProcessor implements \Magento\Framework\Event\ObserverInterface
+class PlaceOrderObserver implements \Magento\Framework\Event\ObserverInterface
 {
     protected $sourceDeductionManager;
 
