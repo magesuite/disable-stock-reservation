@@ -23,7 +23,7 @@ class CompensateRegisteredQuantities
         \Magento\InventorySalesApi\Api\Data\SalesChannelInterface $salesChannel,
         \Magento\InventorySalesApi\Api\Data\SalesEventInterface $salesEvent)
     {
-        if($salesEvent->getType() == \MageSuite\DisableStockReservation\Model\SalesEvent::TYPE_ORDER_PLACED)
+        if($salesEvent->getType() == \Magento\InventorySalesApi\Api\Data\SalesEventInterface::EVENT_ORDER_PLACED)
         {
             $stockId = $this->getStockBySalesChannel->execute($salesChannel)->getStockId();
             foreach ($items as $item)
