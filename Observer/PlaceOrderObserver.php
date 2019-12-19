@@ -24,6 +24,11 @@ class PlaceOrderObserver implements \Magento\Framework\Event\ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
+        if ($order->getOrigData('entity_id'))
+        {
+            return;
+        }
+
         $salesEvent = $this->salesEventFactory->create([
             'type' => \Magento\InventorySalesApi\Api\Data\SalesEventInterface::EVENT_ORDER_PLACED,
             'objectType' => \Magento\InventorySalesApi\Api\Data\SalesEventInterface::OBJECT_TYPE_ORDER,
