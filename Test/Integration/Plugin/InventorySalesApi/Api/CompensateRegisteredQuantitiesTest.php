@@ -1,8 +1,8 @@
 <?php
 
-namespace MageSuite\DisableStockReservation\Test\Integration\Observer;
+namespace MageSuite\DisableStockReservation\Test\Integration\Plugin\InventorySalesApi\Api;
 
-class PlaceOrderObserverTest extends \PHPUnit\Framework\TestCase
+class CompensateRegisteredQuantitiesTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Magento\Framework\Registry
@@ -65,9 +65,18 @@ class PlaceOrderObserverTest extends \PHPUnit\Framework\TestCase
     private $cartItemFactory;
 
     /**
+     * @var \Magento\Sales\Model\Convert\Order
+     */
+    private $convertOrder;
+
+    /**
      * @var \Magento\InventoryApi\Api\GetSourceItemsBySkuInterface
      */
     private $getSourceItemsBySkuInterface;
+    /**
+     * @var \Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity
+     */
+    private $getReservationQuantity;
 
     /**
      * @var \Magento\Framework\App\Config\Storage\WriterInterface
@@ -90,6 +99,8 @@ class PlaceOrderObserverTest extends \PHPUnit\Framework\TestCase
         $this->storeRepository = $this->objectManager->get(\Magento\Store\Model\StoreRepository::class);
         $this->cartItemFactory = $this->objectManager->get(\Magento\Quote\Api\Data\CartItemInterfaceFactory::class);
 
+        $this->getReservationQuantity = $this->objectManager->get(\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity::class);
+
         $this->getSourceItemsBySkuInterface = $this->objectManager->get(\Magento\InventoryApi\Api\GetSourceItemsBySkuInterface::class);
         $this->writerConfig = $this->objectManager->get(\Magento\Framework\App\Config\Storage\WriterInterface::class);
     }
@@ -108,7 +119,7 @@ class PlaceOrderObserverTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
      */
-    public function testReduceQuantityAfterOrder()
+    public function testReservationQuantityAfterOrder()
     {
         $sku = 'SKU-2';
         $qty = 2;
@@ -118,8 +129,8 @@ class PlaceOrderObserverTest extends \PHPUnit\Framework\TestCase
         $orderId = $this->placeOrder($sku, $qty, $cart);
         $this->assertNotNull($orderId);
 
-        $qtyInStock = $this->getSourceItemsBySkuInterface->execute($sku)[9]->getQuantity();
-        $this->assertEquals(3, $qtyInStock);
+        $qty = $this->getReservationQuantity->execute($sku, $stockId);
+        $this->assertEquals(0, $qty);
 
         $this->deleteOrderById($orderId);
     }
@@ -188,92 +199,92 @@ class PlaceOrderObserverTest extends \PHPUnit\Framework\TestCase
 
     public static function loadProductsFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/products.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/products.php";
     }
 
     public static function loadSourcesFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/sources.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/sources.php";
     }
 
     public static function loadStocksFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/stocks.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stocks.php";
     }
 
     public static function loadStockSourceLinksFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/stock_source_links.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stock_source_links.php";
     }
 
     public static function loadSourceItemsFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/source_items.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/source_items.php";
     }
 
     public static function loadWebsiteWithStoresFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
     }
 
     public static function loadSourceItemsConfigurableFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable.php";
     }
 
     public static function loadStockWebsiteSalesChannelsFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels.php";
     }
 
     public static function loadQuoteFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/quote.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/quote.php";
     }
 
     public static function loadReindexInventoryFixture()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
     }
 
 
     public static function loadSourcesFixtureRollback()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/sources_rollback.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/sources_rollback.php";
     }
 
     public static function loadStocksFixtureRollback()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/stocks_rollback.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stocks_rollback.php";
     }
 
     public static function loadStockSourceLinksFixtureRollback()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/stock_source_links_rollback.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stock_source_links_rollback.php";
     }
 
     public static function loadStockWebsiteSalesChannelsFixtureRollback()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels_rollback.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels_rollback.php";
     }
 
     public static function loadSourceItemsConfigurableRollback()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable_rollback.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable_rollback.php";
     }
 
     public static function loadWebsiteWithStoresFixtureRollback()
     {
-        require __DIR__ . "/../_files/websites_with_stores_rollback.php";
+        require __DIR__ . "/../../../_files/websites_with_stores_rollback.php";
     }
 
     public static function loadQuoteFixtureRollback()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/quote_rollback.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/quote_rollback.php";
     }
 
     public static function loadReindexInventoryFixtureRollback()
     {
-        require __DIR__ . "/../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
+        require __DIR__ . "/../../../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
     }
 }
