@@ -2,7 +2,7 @@
 
 namespace MageSuite\DisableStockReservation\Test\Integration\Observer;
 
-class PlaceOrderObserverTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
+class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
 {
     /**
      * @magentoDbIsolation disabled

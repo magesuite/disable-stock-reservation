@@ -2,7 +2,7 @@
 
 namespace MageSuite\DisableStockReservation\Observer;
 
-class CompensateStockReservation implements \Magento\Framework\Event\ObserverInterface
+class ReduceSaleableQuantity implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var \MageSuite\DisableStockReservation\Service\SourceDeductionManager
