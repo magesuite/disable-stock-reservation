@@ -4,8 +4,14 @@ namespace MageSuite\DisableStockReservation\Service;
 
 class ReservationManager
 {
+    /**
+     * @var \Magento\InventoryReservations\Model\ReservationBuilder
+     */
     protected $reservationBuilder;
 
+    /**
+     * @var \Magento\InventoryReservations\Model\AppendReservations
+     */
     protected $appendReservations;
 
     public function __construct(

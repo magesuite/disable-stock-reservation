@@ -4,14 +4,29 @@ namespace MageSuite\DisableStockReservation\Service;
 
 class SourceDeductionManager
 {
+    /**
+     * @var \MageSuite\DisableStockReservation\Model\Inventory
+     */
     protected $inventory;
 
+    /**
+     * @var \Magento\InventorySourceSelectionApi\Model\SourceSelectionService
+     */
     protected $sourceSelectionService;
 
+    /**
+     * @var \Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface
+     */
     protected $getDefaultSourceSelectionAlgorithmCode;
 
+    /**
+     * @var \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory
+     */
     protected $sourceDeductionRequestsFromSourceSelectionFactory;
 
+    /**
+     * @var \Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface
+     */
     protected $sourceDeductionService;
 
     public function __construct(

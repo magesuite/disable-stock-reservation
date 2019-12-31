@@ -4,8 +4,14 @@ namespace MageSuite\DisableStockReservation\Plugin\InventorySalesApi\Api;
 
 class CompensateRegisteredQuantities
 {
+    /**
+     * @var \MageSuite\DisableStockReservation\Service\ReservationManager
+     */
     protected $reservationManager;
 
+    /**
+     * @var \Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface
+     */
     protected $getStockBySalesChannel;
 
     public function __construct(

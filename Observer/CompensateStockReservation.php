@@ -2,20 +2,28 @@
 
 namespace MageSuite\DisableStockReservation\Observer;
 
-class PlaceOrderObserver implements \Magento\Framework\Event\ObserverInterface
+class CompensateStockReservation implements \Magento\Framework\Event\ObserverInterface
 {
+    /**
+     * @var \MageSuite\DisableStockReservation\Service\SourceDeductionManager
+     */
     protected $sourceDeductionManager;
 
+    /**
+     * @var \Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory
+     */
     protected $salesEventFactory;
 
+    /**
+     * @var \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory
+     */
     protected $deductionRequestsFromSourceSelectionFactory;
 
     public function __construct(
         \MageSuite\DisableStockReservation\Service\SourceDeductionManager $sourceDeductionManager,
         \Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory $salesEventFactory,
         \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory $deductionRequestsFromSourceSelectionFactory
-    )
-    {
+    ) {
         $this->sourceDeductionManager = $sourceDeductionManager;
         $this->salesEventFactory = $salesEventFactory;
         $this->deductionRequestsFromSourceSelectionFactory = $deductionRequestsFromSourceSelectionFactory;
@@ -24,8 +32,7 @@ class PlaceOrderObserver implements \Magento\Framework\Event\ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
-        if ($order->getOrigData('entity_id'))
-        {
+        if ($order->getOrigData('entity_id')) {
             return;
         }
 

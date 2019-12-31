@@ -4,16 +4,34 @@ namespace MageSuite\DisableStockReservation\Model;
 
 class Inventory
 {
+    /**
+     * @var \Magento\InventorySales\Model\StockByWebsiteIdResolver
+     */
     protected $stockByWebsiteIdResolver;
 
+    /**
+     * @var \Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface
+     */
     protected $getSkuFromOrderItem;
 
+    /**
+     * @var \Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory
+     */
     protected $itemRequestFactory;
 
+    /**
+     * @var \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory
+     */
     protected $inventoryRequestFactory;
 
+    /**
+     * @var \Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory
+     */
     protected $addressFactory;
 
+    /**
+     * @var \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestExtensionInterfaceFactory
+     */
     protected $inventoryRequestExtensionFactory;
 
     public function __construct(
