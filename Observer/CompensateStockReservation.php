@@ -32,7 +32,7 @@ class CompensateStockReservation implements \Magento\Framework\Event\ObserverInt
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
-        if ($order->getOrigData('entity_id')) {
+        if (!$this->isNewOrder($order)) {
             return;
         }
 
@@ -43,5 +43,10 @@ class CompensateStockReservation implements \Magento\Framework\Event\ObserverInt
         ]);
 
         $this->sourceDeductionManager->process($order, $salesEvent);
+    }
+
+    protected function isNewOrder(\Magento\Sales\Model\Order $order)
+    {
+        return $order->getOrigData('entity_id') ? false : true;
     }
 }
