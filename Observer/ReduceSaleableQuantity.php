@@ -36,11 +36,13 @@ class ReduceSaleableQuantity implements \Magento\Framework\Event\ObserverInterfa
             return;
         }
 
-        $salesEvent = $this->salesEventFactory->create([
+        $salesEvent = $this->salesEventFactory->create(
+            [
             'type' => \Magento\InventorySalesApi\Api\Data\SalesEventInterface::EVENT_ORDER_PLACED,
             'objectType' => \Magento\InventorySalesApi\Api\Data\SalesEventInterface::OBJECT_TYPE_ORDER,
             'objectId' => $order->getEntityId(),
-        ]);
+            ]
+        );
 
         $this->sourceDeductionManager->process($order, $salesEvent);
     }

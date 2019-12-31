@@ -41,9 +41,7 @@ class Inventory
         \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory $inventoryRequestFactory,
         \Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory $addressFactory,
         \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestExtensionInterfaceFactory $inventoryRequestExtensionFactory
-
-    )
-    {
+    ) {
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getSkuFromOrderItem = $getSkuFromOrderItem;
         $this->itemRequestFactory = $itemRequestFactory;
@@ -58,14 +56,15 @@ class Inventory
             $order->getStore()->getWebsiteId()
         );
 
-        $inventoryRequest = $this->inventoryRequestFactory->create([
+        $inventoryRequest = $this->inventoryRequestFactory->create(
+            [
             "stockId" => $stock->getStockId(),
             "items" => $this->getItemToDeduct($order)
-        ]);
+            ]
+        );
 
         $address = $this->getAddressFromOrder($order);
-        if ($address !== null)
-        {
+        if ($address !== null) {
             $extensionAttributes = $this->inventoryRequestExtensionFactory->create();
             $extensionAttributes->setDestinationAddress($address);
             $inventoryRequest->setExtensionAttributes($extensionAttributes);
@@ -82,10 +81,12 @@ class Inventory
             $itemSku = $this->getSkuFromOrderItem->execute($orderItem);
             $qty = $this->castQty($orderItem, $orderItem->getQtyOrdered());
 
-            $selectionRequestItems[] = $this->itemRequestFactory->create([
+            $selectionRequestItems[] = $this->itemRequestFactory->create(
+                [
                 'sku' => $itemSku,
                 'qty' => $qty,
-            ]);
+                ]
+            );
         }
 
         return $selectionRequestItems;
@@ -94,8 +95,7 @@ class Inventory
     protected function getAddressFromOrder(\Magento\Sales\Model\Order $order)
     {
         $shippingAddress = $order->getShippingAddress();
-        if ($shippingAddress === null)
-        {
+        if ($shippingAddress === null) {
             return null;
         }
 

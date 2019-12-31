@@ -35,8 +35,7 @@ class SourceDeductionManager
         \Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
         \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory $sourceDeductionRequestsFromSourceSelectionFactory,
         \Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface $sourceDeductionService
-    )
-    {
+    ) {
         $this->inventory = $inventory;
         $this->sourceSelectionService = $sourceSelectionService;
         $this->getDefaultSourceSelectionAlgorithmCode = $getDefaultSourceSelectionAlgorithmCode;

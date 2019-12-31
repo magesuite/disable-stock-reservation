@@ -22,7 +22,7 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
     }
 
     /**
-     * @magentoDbIsolation disabled
+     * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
      * @magentoDataFixture loadProductsFixture
@@ -62,91 +62,91 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
 
     public static function loadProductsFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/products.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/products.php";
     }
 
     public static function loadSourcesFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/sources.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/sources.php";
     }
 
     public static function loadStocksFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stocks.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stocks.php";
     }
 
     public static function loadStockSourceLinksFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stock_source_links.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stock_source_links.php";
     }
 
     public static function loadSourceItemsFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/source_items.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/source_items.php";
     }
 
     public static function loadWebsiteWithStoresFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
     }
 
     public static function loadSourceItemsConfigurableFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable.php";
     }
 
     public static function loadStockWebsiteSalesChannelsFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels.php";
     }
 
     public static function loadQuoteFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/quote.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/quote.php";
     }
 
     public static function loadReindexInventoryFixture()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
     }
 
     public static function loadSourcesFixtureRollback()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/sources_rollback.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/sources_rollback.php";
     }
 
     public static function loadStocksFixtureRollback()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stocks_rollback.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stocks_rollback.php";
     }
 
     public static function loadStockSourceLinksFixtureRollback()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stock_source_links_rollback.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-api/Test/_files/stock_source_links_rollback.php";
     }
 
     public static function loadStockWebsiteSalesChannelsFixtureRollback()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels_rollback.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels_rollback.php";
     }
 
     public static function loadSourceItemsConfigurableRollback()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable_rollback.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable_rollback.php";
     }
 
     public static function loadWebsiteWithStoresFixtureRollback()
     {
-        require __DIR__ . "/../../../_files/websites_with_stores_rollback.php";
+        include __DIR__ . "/../../../_files/websites_with_stores_rollback.php";
     }
 
     public static function loadQuoteFixtureRollback()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/quote_rollback.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-sales-api/Test/_files/quote_rollback.php";
     }
 
     public static function loadReindexInventoryFixtureRollback()
     {
-        require __DIR__ . "/../../../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
+        include __DIR__ . "/../../../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
     }
 }

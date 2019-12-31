@@ -6,10 +6,14 @@ use Magento\Framework\Registry;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
 
-/** @var Registry $registry */
+/**
+ * @var Registry $registry 
+*/
 $registry = Bootstrap::getObjectManager()->get(Registry::class);
 
-/** @var \Magento\Framework\App\Config\Storage\WriterInterface $writerConfig */
+/**
+ * @var \Magento\Framework\App\Config\Storage\WriterInterface $writerConfig 
+*/
 $writerConfig = Bootstrap::getObjectManager()->get(\Magento\Framework\App\Config\Storage\WriterInterface::class);
 
 $resource = Bootstrap::getObjectManager()->get(\Magento\Framework\App\ResourceConnection::class);
@@ -22,7 +26,9 @@ $coreConfigDataTable = "core_config_data";
 $websiteCodes = ['eu_website', 'us_website', 'global_website'];
 
 foreach ($websiteCodes as $websiteCode) {
-    /** @var Website $website */
+    /**
+ * @var Website $website 
+*/
     $website = Bootstrap::getObjectManager()->create(Website::class);
     $website->load($websiteCode, 'code');
 
