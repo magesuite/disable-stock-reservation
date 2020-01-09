@@ -180,11 +180,6 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
     }
 
-    public static function loadSourceItemsConfigurableFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable.php";
-    }
-
     public static function loadStockWebsiteSalesChannelsFixture()
     {
         include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels.php";
@@ -198,6 +193,15 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
     public static function loadReindexInventoryFixture()
     {
         include __DIR__ . "/../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
+    }
+
+    /**
+     * Rollbacks
+     */
+
+    public static function loadProductsFixtureRollback()
+    {
+        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/products_rollback.php";
     }
 
     public static function loadSourcesFixtureRollback()
@@ -215,14 +219,14 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/stock_source_links_rollback.php";
     }
 
+    public static function loadSourceItemsFixtureRollback()
+    {
+        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/source_items_rollback.php";
+    }
+
     public static function loadStockWebsiteSalesChannelsFixtureRollback()
     {
         include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels_rollback.php";
-    }
-
-    public static function loadSourceItemsConfigurableRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-configurable-product/Test/_files/source_items_configurable_rollback.php";
     }
 
     public static function loadWebsiteWithStoresFixtureRollback()
