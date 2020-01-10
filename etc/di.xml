@@ -4,7 +4,4 @@
         <plugin name="CompensateRegisteredQuantities" type="\MageSuite\DisableStockReservation\Plugin\InventorySalesApi\Api\CompensateRegisteredQuantities" sortOrder="1" disabled="false" />
         <plugin name="PreventAddingDefaultCompensation" type="\MageSuite\DisableStockReservation\Plugin\InventorySalesApi\Api\PreventAddingDefaultCompensation" sortOrder="2" disabled="false" />
     </type>
-    <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
-        <plugin name="set_data_to_legacy_catalog_inventory_at_source_items_save" disabled="true"/>
-    </type>
 </config>
