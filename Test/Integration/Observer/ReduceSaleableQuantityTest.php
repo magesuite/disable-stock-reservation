@@ -28,7 +28,7 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
         $orderId = $this->placeOrder($sku, $qty, $cart);
         $this->assertNotNull($orderId);
 
-        $qtyInStock = $this->getSourceItemsBySkuInterface->execute($sku)[9]->getQuantity();
+        $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
         $this->assertEquals(3, $qtyInStock);
 
         $this->deleteOrderById($orderId);
