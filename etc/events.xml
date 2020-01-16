@@ -3,4 +3,7 @@
     <event name="sales_order_save_after">
         <observer name="remove_quantities_from_stock" instance="MageSuite\DisableStockReservation\Observer\ReduceSaleableQuantity"/>
     </event>
+    <event name="sales_order_shipment_save_after">
+        <observer name="inventory_sales_source_deduction_processor" disabled="true"/>
+    </event>
 </config>
