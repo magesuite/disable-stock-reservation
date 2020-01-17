@@ -177,7 +177,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
 
     public static function loadWebsiteWithStoresFixture()
     {
-        include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
+        include __DIR__ . "/_files/websites_with_stores.php";
     }
 
     public static function loadStockWebsiteSalesChannelsFixture()
