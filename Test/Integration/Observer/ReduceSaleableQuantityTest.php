@@ -60,8 +60,6 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
         $this->assertEquals(2, $qtyInStock);
-
-        $this->deleteOrderById($orderId);
     }
 
     /**
@@ -90,8 +88,6 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
         $this->assertEquals(2, $qtyInStock);
-
-        $this->deleteOrderById($orderId);
     }
 
     /**

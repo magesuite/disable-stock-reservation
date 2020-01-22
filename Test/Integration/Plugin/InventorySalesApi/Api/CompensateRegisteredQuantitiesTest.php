@@ -41,7 +41,5 @@ class CompensateRegisteredQuantitiesTest extends \MageSuite\DisableStockReservat
 
         $qty = $this->getReservationQuantity->execute($sku, $stockId);
         $this->assertEquals(0, $qty);
-
-        $this->deleteOrderById($orderId);
     }
 }
