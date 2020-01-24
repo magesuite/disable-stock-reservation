@@ -30,8 +30,6 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
         $this->assertEquals(3, $qtyInStock);
-
-        $this->deleteOrderById($orderId);
     }
 
     /**
@@ -63,19 +61,19 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
     }
 
     /**
- * @magentoDbIsolation  disabled
- * @magentoAppIsolation enabled
- *
- * @magentoDataFixture loadProductsFixture
- * @magentoDataFixture loadSourcesFixture
- * @magentoDataFixture loadStocksFixture
- * @magentoDataFixture loadStockSourceLinksFixture
- * @magentoDataFixture loadSourceItemsFixture
- * @magentoDataFixture loadWebsiteWithStoresFixture
- * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
- * @magentoDataFixture loadQuoteFixture
- * @magentoDataFixture loadReindexInventoryFixture
- */
+     * @magentoDbIsolation  disabled
+     * @magentoAppIsolation enabled
+     *
+     * @magentoDataFixture loadProductsFixture
+     * @magentoDataFixture loadSourcesFixture
+     * @magentoDataFixture loadStocksFixture
+     * @magentoDataFixture loadStockSourceLinksFixture
+     * @magentoDataFixture loadSourceItemsFixture
+     * @magentoDataFixture loadWebsiteWithStoresFixture
+     * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
+     * @magentoDataFixture loadQuoteFixture
+     * @magentoDataFixture loadReindexInventoryFixture
+     */
     public function testReduceQtyAfterOrderLeavingNoneQtyInTheStock()
     {
         $sku = 'SKU-2';

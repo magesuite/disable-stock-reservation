@@ -10,59 +10,32 @@ class SourceDeductionManager
     protected $sourceDeductionService;
 
     /**
-     * @var \MageSuite\DisableStockReservation\Model\SourceDeductionRequestFromOrderFactory
+     * @var \MageSuite\DisableStockReservation\Model\GetSourceSelectionResultFromOrder
      */
-    protected $getSourceDeductionRequestsFromOrder;
+    protected $getSourceSelectionResultFromOrder;
 
     /**
-     * @var \MageSuite\DisableStockReservation\Model\GetItemsToDeductFromOrder
+     * @var \Magento\InventorySales\Model\ReturnProcessor\GetSourceDeductionRequestFromSourceSelection
      */
-    protected $getItemsToDeductFromOrder;
-
-    /**
-     * @var \Magento\InventorySales\Model\StockByWebsiteIdResolver
-     */
-    protected $stockByWebsiteIdResolver;
-
-    /**
-     * @var \MageSuite\DisableStockReservation\Model\GetSourceCodeBySkuWithHighestPriority
-     */
-    protected $getSourceCodeBySkuWithHighestPriority;
+    protected $getSourceDeductionRequestFromSourceSelection;
 
     public function __construct(
         \Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface $sourceDeductionService,
-        \MageSuite\DisableStockReservation\Model\GetSourceDeductionRequestsFromOrderFactory $getSourceDeductionRequestFromOrder,
-        \MageSuite\DisableStockReservation\Model\GetItemsToDeductFromOrder $getItemsToDeductFromOrder,
-        \Magento\InventorySales\Model\StockByWebsiteIdResolver $stockByWebsiteIdResolver,
-        \MageSuite\DisableStockReservation\Model\GetSourceCodeBySkuWithHighestPriority $getSourceCodeBySkuWithHighestPriority
+        \MageSuite\DisableStockReservation\Model\GetSourceSelectionResultFromOrder $getSourceSelectionResultFromOrder,
+        \Magento\InventorySales\Model\ReturnProcessor\GetSourceDeductionRequestFromSourceSelection $getSourceDeductionRequestFromSourceSelection
     ) {
         $this->sourceDeductionService = $sourceDeductionService;
-        $this->getSourceDeductionRequestsFromOrder = $getSourceDeductionRequestFromOrder;
-        $this->getItemsToDeductFromOrder = $getItemsToDeductFromOrder;
-        $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
-        $this->getSourceCodeBySkuWithHighestPriority = $getSourceCodeBySkuWithHighestPriority;
+        $this->getSourceSelectionResultFromOrder = $getSourceSelectionResultFromOrder;
+        $this->getSourceDeductionRequestFromSourceSelection = $getSourceDeductionRequestFromSourceSelection;
     }
 
     public function process(\Magento\Sales\Model\Order $order)
     {
-        $orderItems = $this->getItemsToDeductFromOrder->execute($order);
-        $groupedItems = $this->groupByOrderItemsBySources($orderItems, $order->getStore()->getWebsiteId());
+        $sourceSelectionResults = $this->getSourceSelectionResultFromOrder->execute($order);
+        $sourceDeductionRequests = $this->getSourceDeductionRequestFromSourceSelection->execute($order, $sourceSelectionResults);
 
-        foreach ($groupedItems as $sourceCode => $items) {
-            $sourceDeductionRequest = $this->getSourceDeductionRequestsFromOrder->execute($order, $sourceCode, $orderItems);
+        foreach ($sourceDeductionRequests as $sourceDeductionRequest) {
             $this->sourceDeductionService->execute($sourceDeductionRequest);
         }
-    }
-
-    protected function groupByOrderItemsBySources($orderItems, $websiteId)
-    {
-        $groupedItems = [];
-        $stock = $this->stockByWebsiteIdResolver->execute($websiteId);
-        foreach ($orderItems as $item) {
-            $sourceCode = $this->getSourceCodeBySkuWithHighestPriority->execute($item->getSku(), $stock->getStockId());
-            $groupedItems[$sourceCode][] = $item;
-        }
-
-        return $groupedItems;
     }
 }

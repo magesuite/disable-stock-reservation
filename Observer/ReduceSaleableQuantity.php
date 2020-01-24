@@ -14,19 +14,12 @@ class ReduceSaleableQuantity implements \Magento\Framework\Event\ObserverInterfa
      */
     protected $salesEventFactory;
 
-    /**
-     * @var \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory
-     */
-    protected $deductionRequestsFromSourceSelectionFactory;
-
     public function __construct(
         \MageSuite\DisableStockReservation\Service\SourceDeductionManager $sourceDeductionManager,
-        \Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory $salesEventFactory,
-        \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory $deductionRequestsFromSourceSelectionFactory
+        \Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory $salesEventFactory
     ) {
         $this->sourceDeductionManager = $sourceDeductionManager;
         $this->salesEventFactory = $salesEventFactory;
-        $this->deductionRequestsFromSourceSelectionFactory = $deductionRequestsFromSourceSelectionFactory;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
