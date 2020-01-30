@@ -5,64 +5,37 @@ namespace MageSuite\DisableStockReservation\Service;
 class SourceDeductionManager
 {
     /**
-     * @var \MageSuite\DisableStockReservation\Model\Inventory
-     */
-    protected $inventory;
-
-    /**
-     * @var \Magento\InventorySourceSelectionApi\Model\SourceSelectionService
-     */
-    protected $sourceSelectionService;
-
-    /**
-     * @var \Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface
-     */
-    protected $getDefaultSourceSelectionAlgorithmCode;
-
-    /**
-     * @var \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory
-     */
-    protected $sourceDeductionRequestsFromSourceSelectionFactory;
-
-    /**
      * @var \Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface
      */
     protected $sourceDeductionService;
 
+    /**
+     * @var \MageSuite\DisableStockReservation\Model\GetSourceSelectionResultFromOrder
+     */
+    protected $getSourceSelectionResultFromOrder;
+
+    /**
+     * @var \Magento\InventorySales\Model\ReturnProcessor\GetSourceDeductionRequestFromSourceSelection
+     */
+    protected $getSourceDeductionRequestFromSourceSelection;
+
     public function __construct(
-        \MageSuite\DisableStockReservation\Model\Inventory $inventory,
-        \Magento\InventorySourceSelectionApi\Model\SourceSelectionService $sourceSelectionService,
-        \Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
-        \Magento\InventoryShipping\Model\SourceDeductionRequestsFromSourceSelectionFactory $sourceDeductionRequestsFromSourceSelectionFactory,
-        \Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface $sourceDeductionService
+        \Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface $sourceDeductionService,
+        \MageSuite\DisableStockReservation\Model\GetSourceSelectionResultFromOrder $getSourceSelectionResultFromOrder,
+        \Magento\InventorySales\Model\ReturnProcessor\GetSourceDeductionRequestFromSourceSelection $getSourceDeductionRequestFromSourceSelection
     ) {
-        $this->inventory = $inventory;
-        $this->sourceSelectionService = $sourceSelectionService;
-        $this->getDefaultSourceSelectionAlgorithmCode = $getDefaultSourceSelectionAlgorithmCode;
-        $this->sourceDeductionRequestsFromSourceSelectionFactory = $sourceDeductionRequestsFromSourceSelectionFactory;
         $this->sourceDeductionService = $sourceDeductionService;
+        $this->getSourceSelectionResultFromOrder = $getSourceSelectionResultFromOrder;
+        $this->getSourceDeductionRequestFromSourceSelection = $getSourceDeductionRequestFromSourceSelection;
     }
 
-    public function process(\Magento\Sales\Model\Order $order, \Magento\InventorySalesApi\Api\Data\SalesEventInterface $salesEvent)
+    public function process(\Magento\Sales\Model\Order $order)
     {
-        $sourceSelectionResult = $this->getSourceSelectionResult($order);
-        $sourceDeductionRequests = $this->sourceDeductionRequestsFromSourceSelectionFactory->create(
-            $sourceSelectionResult,
-            $salesEvent,
-            $order->getStore()->getWebsiteId()
-        );
+        $sourceSelectionResults = $this->getSourceSelectionResultFromOrder->execute($order);
+        $sourceDeductionRequests = $this->getSourceDeductionRequestFromSourceSelection->execute($order, $sourceSelectionResults);
 
-        foreach ($sourceDeductionRequests as $sourceDeductionRequest)
-        {
+        foreach ($sourceDeductionRequests as $sourceDeductionRequest) {
             $this->sourceDeductionService->execute($sourceDeductionRequest);
         }
-    }
-
-    protected function getSourceSelectionResult(\Magento\Sales\Model\Order $order)
-    {
-        $inventoryRequest = $this->inventory->getRequestFromOrder($order);
-
-        $selectionAlgorithmCode = $this->getDefaultSourceSelectionAlgorithmCode->execute();
-        return $this->sourceSelectionService->execute($inventoryRequest, $selectionAlgorithmCode);
     }
 }

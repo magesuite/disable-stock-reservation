@@ -86,6 +86,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         $this->cartItemFactory = $this->objectManager->get(\Magento\Quote\Api\Data\CartItemInterfaceFactory::class);
 
         $this->getSourceItemsBySkuInterface = $this->objectManager->get(\Magento\InventoryApi\Api\GetSourceItemsBySkuInterface::class);
+        $this->getProductSalableQtyInterface = $this->objectManager->get(\Magento\InventorySalesApi\Api\GetProductSalableQtyInterface::class);
     }
 
     protected function placeOrder($sku, $quoteItemQty, $cart)

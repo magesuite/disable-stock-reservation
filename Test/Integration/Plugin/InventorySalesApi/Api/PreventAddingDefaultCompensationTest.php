@@ -57,8 +57,6 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
 
         $qty = $this->getReservationQuantity->execute($sku, $stockId);
         $this->assertEquals(0, $qty);
-
-        $this->deleteOrderById($orderId);
     }
 
     /**
@@ -97,7 +95,5 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
 
         $qty = $this->getReservationQuantity->execute($sku, $stockId);
         $this->assertEquals(0, $qty);
-
-        $this->deleteOrderById($orderId);
     }
 }
