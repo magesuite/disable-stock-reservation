@@ -69,6 +69,11 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
      */
     protected $getSourceItemsBySkuInterface;
 
+    /**
+     * @var \Magento\InventorySales\Model\GetAssignedSalesChannelsForStock
+     */
+    protected $getAssignedSalesChannelsForStock;
+
     public function setUp()
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
@@ -86,7 +91,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         $this->cartItemFactory = $this->objectManager->get(\Magento\Quote\Api\Data\CartItemInterfaceFactory::class);
 
         $this->getSourceItemsBySkuInterface = $this->objectManager->get(\Magento\InventoryApi\Api\GetSourceItemsBySkuInterface::class);
-        $this->getProductSalableQtyInterface = $this->objectManager->get(\Magento\InventorySalesApi\Api\GetProductSalableQtyInterface::class);
+        $this->getAssignedSalesChannelsForStock = $this->objectManager->create(\Magento\InventorySales\Model\GetAssignedSalesChannelsForStock::class);
     }
 
     protected function placeOrder($sku, $quoteItemQty, $cart)
@@ -107,8 +112,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
             ->create();
         $cart = current($this->cartRepository->getList($searchCriteria)->getItems());
 
-        $stock = $this->stockRepository->get($stockId);
-        $salesChannels = $stock->getExtensionAttributes()->getSalesChannels();
+        $salesChannels = $this->getAssignedSalesChannelsForStock->execute($stockId);
         $storeCode = 'store_for_';
         foreach ($salesChannels as $salesChannel) {
             if ($salesChannel->getType() == \Magento\InventorySalesApi\Api\Data\SalesChannelInterface::TYPE_WEBSITE) {
