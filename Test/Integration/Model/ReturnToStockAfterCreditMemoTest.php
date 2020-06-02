@@ -4,6 +4,8 @@ namespace MageSuite\DisableStockReservation\Test\Integration\Model;
 
 class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
 {
+    const DEFAULT_STORE_ID = 1;
+
     /**
      * @var \Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity
      */
@@ -15,22 +17,25 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
     protected $invoiceService;
 
     /**
+     * @var \Magento\Sales\Model\Service\CreditmemoService
+     */
+    protected $creditMemoService;
+
+    /**
      * @var \Magento\Sales\Model\Order\CreditmemoFactory
      */
-    protected $creditmemoFactory;
+    protected $creditMemoFactory;
 
     public function setUp()
     {
         parent::setUp();
         $this->getReservationQuantity = $this->objectManager->get(\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity::class);
         $this->invoiceService = $this->objectManager->get(\Magento\Sales\Model\Service\InvoiceService::class);
-        $this->creditmemoFactory = $this->objectManager->get(\Magento\Sales\Model\Order\CreditmemoFactory::class);
+        $this->creditMemoService = $this->objectManager->get(\Magento\Sales\Model\Service\CreditmemoService::class);
+        $this->creditMemoFactory = $this->objectManager->get(\Magento\Sales\Model\Order\CreditmemoFactory::class);
     }
 
     /**
-     * @magentoDbIsolation disabled
-     * @magentoAppIsolation enabled
-     *
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
@@ -40,46 +45,7 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
-     */
-    public function testProductsHaveCorrectQtyAfterCreditMemo()
-    {
-        $sku = 'SKU-2';
-        $qty = 2;
-        $stockId = 30;
-
-        $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
-        $order = $this->orderRepository->get($orderId);
-        $orderItems = $order->getItems();
-        $orderItem = reset($orderItems);
-
-        $data['qtys'] = [$orderItem->getId() => $orderItem->getQtyOrdered()];
-
-        $invoice = $this->invoiceService->prepareInvoice($order, [$orderItem->getId() => $orderItem->getQtyOrdered()]);
-        $invoice->register();
-        $invoice->save();
-        $order->save();
-
-        $creditMemo = $this->creditmemoFactory->createByInvoice($invoice, $data);
-        $creditMemo->save();
-
-        $qty = $this->getReservationQuantity->execute($sku, $stockId);
-        $this->assertEquals(0, $qty);
-    }
-
-    /**
      * @magentoDbIsolation disabled
-     * @magentoAppIsolation enabled
-     *
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadSourcesFixture
-     * @magentoDataFixture loadStocksFixture
-     * @magentoDataFixture loadStockSourceLinksFixture
-     * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
-     * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
-     * @magentoDataFixture loadQuoteFixture
-     * @magentoDataFixture loadReindexInventoryFixture
      */
     public function testProductsHaveCorrectQtyAfterCreditMemoWithReturnToStockEnabled()
     {
@@ -88,24 +54,26 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
+        $this->storeManager->setCurrentStore('default');
         $orderId = $this->placeOrder($sku, $qty, $cart);
         $order = $this->orderRepository->get($orderId);
         $orderItems = $order->getItems();
         $orderItem = reset($orderItems);
-
         $data['qtys'] = [$orderItem->getId() => $orderItem->getQtyOrdered()];
-
+        $this->storeManager->setCurrentStore('default');
         $invoice = $this->invoiceService->prepareInvoice($order, [$orderItem->getId() => $orderItem->getQtyOrdered()]);
+        $invoice->setStoreId(self::DEFAULT_STORE_ID);
         $invoice->register();
-        $invoice->save();
+        $order = $invoice->getOrder();
+        $order->setIsInProcess(true);
+        $order->setStoreId(self::DEFAULT_STORE_ID);
         $order->save();
-
-        $creditMemo = $this->creditmemoFactory->createByInvoice($invoice, $data);
-        foreach ($creditMemo->getItems() as $creditmemoItem) {
-            $creditmemoItem->setBackToStock(true);
+        $creditMemo = $this->creditMemoFactory->createByInvoice($invoice, $data);
+        foreach ($creditMemo->getItems() as $creditMemoItem) {
+            $creditMemoItem->setBackToStock(true);
         }
-        $creditMemo->save();
-
+        $creditMemo->setStoreId(self::DEFAULT_STORE_ID);
+        $this->creditMemoService->refund($creditMemo);
         $qty = $this->getReservationQuantity->execute($sku, $stockId);
         $this->assertEquals(0, $qty);
     }
