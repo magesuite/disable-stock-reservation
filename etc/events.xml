@@ -6,7 +6,4 @@
     <event name="sales_order_shipment_save_after">
         <observer name="inventory_sales_source_deduction_processor" disabled="true"/>
     </event>
-    <event name="sales_order_creditmemo_save_after">
-        <observer name="deduct_source_item_quantity_on_refund" disabled="true"/>
-    </event>
 </config>
