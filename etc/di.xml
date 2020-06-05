@@ -9,4 +9,10 @@
     <type name="\Magento\Sales\Api\OrderManagementInterface">
         <plugin name="inventory_reservations_placement" disabled="true" />
     </type>
+    <type name="Magento\SalesInventory\Model\Order\ReturnProcessor">
+        <plugin name="process_return_product_qty_on_credit_memo" disabled="true" />
+    </type>
+    <type name="Magento\CatalogInventory\Model\StockManagement">
+        <plugin name="process_back_item_qty" disabled="true" />
+    </type>
 </config>
