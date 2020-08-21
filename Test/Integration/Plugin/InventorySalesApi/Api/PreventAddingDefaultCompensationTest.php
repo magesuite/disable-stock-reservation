@@ -14,7 +14,7 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
      */
     protected $convertOrder;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->getReservationQuantity = $this->objectManager->get(\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity::class);

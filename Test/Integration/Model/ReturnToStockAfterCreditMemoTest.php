@@ -26,7 +26,7 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
      */
     protected $creditMemoFactory;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->getReservationQuantity = $this->objectManager->get(\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity::class);
