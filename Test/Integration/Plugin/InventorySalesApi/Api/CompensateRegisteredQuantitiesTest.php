@@ -9,7 +9,7 @@ class CompensateRegisteredQuantitiesTest extends \MageSuite\DisableStockReservat
      */
     protected $getReservationQuantity;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->getReservationQuantity = $this->objectManager->get(\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity::class);
