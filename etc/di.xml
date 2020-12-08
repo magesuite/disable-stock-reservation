@@ -6,6 +6,9 @@
     <type name="\Magento\InventorySourceSelectionApi\Model\GetInStockSourceItemsBySkusAndSortedSource">
         <plugin name="CastSkusToStrings" type="\MageSuite\DisableStockReservation\Plugin\InventorySourceSelectionApi\Model\CastSkusToStrings" sortOrder="1" disabled="false" />
     </type>
+    <type name="\Magento\InventoryShipping\Model\InventoryRequestFromOrderFactory">
+        <plugin name="bundle_children_saleable_qty_deduction" type="\MageSuite\DisableStockReservation\Plugin\InventoryShipping\Model\InventoryRequestFromOrderFactory\BundleChildrenSaleableQtyDeduction" sortOrder="1" disabled="false" />
+    </type>
     <type name="\Magento\Sales\Api\OrderManagementInterface">
         <plugin name="inventory_reservations_placement" disabled="true" />
     </type>
