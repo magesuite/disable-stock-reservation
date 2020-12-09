@@ -28,6 +28,9 @@ class BundleChildrenSaleableQtyDeduction
     {
         $this->requestItems = [];
         foreach($order->getItems() as $orderItem) {
+            if ($orderItem->getSku() === null) {
+                continue;
+            }
             if($orderItem->getProductType() === \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE && $orderItem->getProductOptions()['shipment_type'] === '0' ) {
                 foreach ($orderItem->getChildrenItems() as $childrenItem) {
                     $this->processRequestItem($childrenItem);
