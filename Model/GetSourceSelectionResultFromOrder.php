@@ -20,7 +20,7 @@ class GetSourceSelectionResultFromOrder
     protected $sourceSelectionService;
 
     public function __construct(
-        \Magento\InventoryShipping\Model\InventoryRequestFromOrderFactory $inventoryRequestFromOrderFactory,
+        \MageSuite\DisableStockReservation\Model\InventoryRequestFromOrderFactory $inventoryRequestFromOrderFactory,
         \Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
         \Magento\InventorySourceSelectionApi\Model\SourceSelectionService $sourceSelectionService
     ) {
