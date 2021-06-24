@@ -37,7 +37,7 @@ class InventoryRequestFromOrderFactory
 
         $processedItems = [];
         foreach ($order->getItems() as $orderItem) {
-            $itemSku = $orderItem->getSku();
+            $itemSku = $orderItem->getSku() ?: $orderItem->getProduct()->getSku();
             $qtyOrdered = $orderItem->getQtyOrdered();
 
             if ($orderItem->isDeleted()
