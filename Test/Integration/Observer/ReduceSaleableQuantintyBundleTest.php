@@ -57,20 +57,27 @@ class ReduceSaleableQuantintyBundleTest extends \MageSuite\DisableStockReservati
 
         foreach ($itemsToBuy as $sku => $qtyData) {
             $product = $productRepository->get($sku);
-            $options = $product->getTypeInstance()->getOptions($product);
-            $optionsData = [];
-            $optionsQtyData = [];
-            $i = 0;
-            foreach ($options as $option) {
-                $optionsData[$option->getId()] = $option->getId();
-                $optionsQtyData[$option->getId()] = $qtyData['options_qty'][$i];
-                $i++;
+            $typeInstance = $product->getTypeInstance()->setStoreFilter($product->getStoreId(), $product);
+            $optionCollection = $typeInstance->getOptionsCollection($product);
+            $bundleOptions = [];
+            $bundleOptionsQty = [];
+
+            foreach ($optionCollection as $option) {
+                /** @var $option \Magento\Bundle\Model\Option */
+                $selectionsCollection = $typeInstance->getSelectionsCollection([$option->getId()], $product);
+                if ($option->isMultiSelection()) {
+                    $bundleOptions[$option->getId()] = array_column($selectionsCollection->toArray(), 'selection_id');
+                } else {
+                    $bundleOptions[$option->getId()] = $selectionsCollection->getFirstItem()->getSelectionId();
+                }
+                $bundleOptionsQty[$option->getId()] = 1;
             }
+
             $requestData = [
                 'product'           => $product->getProductId(),
                 'qty'               => $qtyData['qty'],
-                'bundle_option'     => $optionsData,
-                'bundle_option_qty' => $optionsQtyData,
+                'bundle_option'     => $bundleOptions,
+                'bundle_option_qty' => $bundleOptionsQty,
             ];
             $request = new \Magento\Framework\DataObject($requestData);
             $cart->addProduct($product, $request);
