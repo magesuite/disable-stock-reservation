@@ -12,22 +12,28 @@ class InventoryRequestFromOrderFactory
     /**
      * @var \Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory
      */
-    private $itemRequestFactory;
+    protected $itemRequestFactory;
 
     /**
      * @var \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory
      */
     protected $inventoryRequestFactory;
 
+    /**
+     * @var \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation
+     */
+    protected $itemValidation;
 
     public function __construct(
         \Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         \Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory $itemRequestFactory,
-        \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory $inventoryRequestFactory
+        \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory $inventoryRequestFactory,
+        \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation $itemValidation
     ) {
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->itemRequestFactory = $itemRequestFactory;
         $this->inventoryRequestFactory = $inventoryRequestFactory;
+        $this->itemValidation = $itemValidation;
     }
 
     public function create(\Magento\Sales\Model\Order $order): \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface
@@ -40,11 +46,7 @@ class InventoryRequestFromOrderFactory
             $itemSku = $orderItem->getSku() ?: $orderItem->getProduct()->getSku();
             $qtyOrdered = $orderItem->getQtyOrdered();
 
-            if ($orderItem->isDeleted()
-                || $orderItem->getHasChildren()
-                || $this->isZero((float)$qtyOrdered)
-                || $orderItem->getIsVirtual()
-            ) {
+            if (! $this->itemValidation->validate($orderItem)) {
                 continue;
             }
 
@@ -73,10 +75,5 @@ class InventoryRequestFromOrderFactory
         }
 
         return $requestItems;
-    }
-
-    protected function isZero(float $floatNumber): bool
-    {
-        return $floatNumber < 0.0000001;
     }
 }

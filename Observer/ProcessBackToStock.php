@@ -29,10 +29,14 @@ class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
      */
     protected $sourceSelectionResultFactory;
 
-
     protected $getSourceDeductionRequestFromSourceSelection;
 
     protected $sourceDeductionService;
+
+    /**
+     * @var \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation
+     */
+    protected $itemValidation;
 
     public function __construct(
         \Magento\InventorySales\Model\StockByWebsiteIdResolver $stockByWebsiteIdResolver,
@@ -40,18 +44,18 @@ class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
         \Magento\InventorySourceDeductionApi\Model\GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku,
         \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterfaceFactory $sourceSelectionItemFactory,
         \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterfaceFactory $sourceSelectionResultFactory,
-
         \MageSuite\DisableStockReservation\Model\CancelProcessor\GetSourceDeductionRequestFromSourceSelection $getSourceDeductionRequestFromSourceSelection,
-        \Magento\InventorySourceDeductionApi\Model\SourceDeductionService $sourceDeductionService
+        \Magento\InventorySourceDeductionApi\Model\SourceDeductionService $sourceDeductionService,
+        \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation $itemValidation
     ) {
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
         $this->getSourceItemBySourceCodeAndSku = $getSourceItemBySourceCodeAndSku;
         $this->sourceSelectionItemFactory = $sourceSelectionItemFactory;
         $this->sourceSelectionResultFactory = $sourceSelectionResultFactory;
-
         $this->getSourceDeductionRequestFromSourceSelection = $getSourceDeductionRequestFromSourceSelection;
         $this->sourceDeductionService = $sourceDeductionService;
+        $this->itemValidation = $itemValidation;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
@@ -82,11 +86,7 @@ class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
     {
         $itemsSkus = [];
         foreach ($order->getItems() as $orderItem) {
-            if ($orderItem->isDeleted()
-                || $orderItem->getHasChildren()
-                || $this->isZero((float)$orderItem->getQtyOrdered())
-                || $orderItem->getIsVirtual()
-            ) {
+            if (! $this->itemValidation->validate($orderItem)) {
                 continue;
             }
 
@@ -119,10 +119,5 @@ class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
             return $source->isEnabled();
         });
         return $sources;
-    }
-
-    protected function isZero(float $floatNumber): bool
-    {
-        return $floatNumber < 0.0000001;
     }
 }

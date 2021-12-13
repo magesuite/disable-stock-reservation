@@ -9,6 +9,8 @@ class ReduceSaleableQuantity implements \Magento\Framework\Event\ObserverInterfa
      */
     protected $sourceDeductionManager;
 
+    protected $processedOrders = [];
+
     public function __construct(\MageSuite\DisableStockReservation\Service\SourceDeductionManager $sourceDeductionManager)
     {
         $this->sourceDeductionManager = $sourceDeductionManager;
@@ -22,10 +24,19 @@ class ReduceSaleableQuantity implements \Magento\Framework\Event\ObserverInterfa
         }
 
         $this->sourceDeductionManager->process($order);
+        $this->processedOrders[] = $order->getId();
     }
 
     protected function isNewOrder(\Magento\Sales\Model\Order $order)
     {
-        return $order->getOrigData('entity_id') ? false : true;
+        if (! in_array($order->getId(), $this->processedOrders)) {
+            return true;
+        }
+
+        if (empty($order->getOrigData('entity_id'))) {
+            return true;
+        }
+
+        return false;
     }
 }

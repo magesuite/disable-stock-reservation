@@ -1,6 +1,8 @@
 <?php
 
-class ReduceSaleableQuantintyBundleTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
+namespace MageSuite\DisableStockReservation\Test\Integration\Observer;
+
+class ReduceSaleableQuantityBundleTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
 {
     /**
      * @magentoDbIsolation  disabled
@@ -15,8 +17,8 @@ class ReduceSaleableQuantintyBundleTest extends \MageSuite\DisableStockReservati
     public function testReduceQtyAfterBundleProductOrder()
     {
         $itemsToBuy = [
-            'SKU-BUNDLE-1' => ['qty' => 1, 'options_qty' => [1, 1]],
-            'SKU-BUNDLE-2' => ['qty' => 1, 'options_qty' => [1, 1]]
+            'SKU-BUNDLE-1' => ['qty' => 1, 'options_qty' => [1, 1]], // SKU-1 qty 1 | SKU-3 qty 1
+            'SKU-BUNDLE-2' => ['qty' => 1, 'options_qty' => [1, 1]]  // SKU-2 qty 1 | SKU-3 qty 1
         ];
 
         $sku1 = 'SKU-1';
@@ -53,7 +55,6 @@ class ReduceSaleableQuantintyBundleTest extends \MageSuite\DisableStockReservati
         $productRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
         /** @var \Magento\Quote\Api\CartManagementInterface $cartManagement */
         $cartManagement = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\Magento\Quote\Api\CartManagementInterface::class);
-
 
         foreach ($itemsToBuy as $sku => $qtyData) {
             $product = $productRepository->get($sku);
