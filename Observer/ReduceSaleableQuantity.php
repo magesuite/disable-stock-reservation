@@ -29,11 +29,9 @@ class ReduceSaleableQuantity implements \Magento\Framework\Event\ObserverInterfa
 
     protected function isNewOrder(\Magento\Sales\Model\Order $order)
     {
-        if (! in_array($order->getId(), $this->processedOrders)) {
-            return true;
-        }
-
-        if (empty($order->getOrigData('entity_id'))) {
+        if (empty($order->getOrigData('entity_id')) &&
+            ! in_array($order->getId(), $this->processedOrders)
+        ) {
             return true;
         }
 
