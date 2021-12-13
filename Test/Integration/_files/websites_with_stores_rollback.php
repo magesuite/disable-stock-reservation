@@ -2,21 +2,13 @@
 
 declare(strict_types=1);
 
-use Magento\Framework\Registry;
-use Magento\Store\Model\Website;
-use Magento\TestFramework\Helper\Bootstrap;
+/** @var \Magento\Framework\Registry $registry */
+$registry = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\Magento\Framework\Registry::class);
 
-/**
- * @var Registry $registry 
-*/
-$registry = Bootstrap::getObjectManager()->get(Registry::class);
+/** @var \Magento\Framework\App\Config\Storage\WriterInterface $writerConfig */
+$writerConfig = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\Magento\Framework\App\Config\Storage\WriterInterface::class);
 
-/**
- * @var \Magento\Framework\App\Config\Storage\WriterInterface $writerConfig 
-*/
-$writerConfig = Bootstrap::getObjectManager()->get(\Magento\Framework\App\Config\Storage\WriterInterface::class);
-
-$resource = Bootstrap::getObjectManager()->get(\Magento\Framework\App\ResourceConnection::class);
+$resource = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\Magento\Framework\App\ResourceConnection::class);
 $database = $resource->getConnection();
 
 $registry->unregister('isSecureArea');
@@ -26,10 +18,8 @@ $coreConfigDataTable = "core_config_data";
 $websiteCodes = ['eu_website', 'us_website', 'global_website'];
 
 foreach ($websiteCodes as $websiteCode) {
-    /**
- * @var Website $website 
-*/
-    $website = Bootstrap::getObjectManager()->create(Website::class);
+    /** @var \Magento\Store\Model\Website $website */
+    $website = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(\Magento\Store\Model\Website::class);
     $website->load($websiteCode, 'code');
 
     $storeIds = $website->getStoreIds();
