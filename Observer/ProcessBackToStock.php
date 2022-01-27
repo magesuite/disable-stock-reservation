@@ -96,20 +96,51 @@ class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
         return $itemsSkus;
     }
 
+    /**
+     * @param $itemsToReturn
+     * @param $sortedSourceCodes
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     protected function getSourceSelectionItems($itemsToReturn, $sortedSourceCodes)
     {
         $sourceItemSelections = [];
         foreach ($itemsToReturn as $returnItemSku => $returnQty) {
-            $sourceItem = $this->getSourceItemBySourceCodeAndSku->execute(current($sortedSourceCodes)->getSourceCode(), $returnItemSku);
-            $sourceItemSelections[] = $this->sourceSelectionItemFactory->create([
-                'sourceCode' => $sourceItem->getSourceCode(),
-                'sku' => $sourceItem->getSku(),
-                'qtyToDeduct' => $returnQty * (-1),
-                'qtyAvailable' => $sourceItem->getQuantity()
-            ]);
+            try {
+                $sourceItemSelections[] = $this->getSourceSelectionItem(
+                    $sortedSourceCodes,
+                    $returnItemSku,
+                    $returnQty
+                );
+            // if product doesn't have source item or not exists, should be skipped
+            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) { // @codingStandardsIgnoreLine
+            }
         }
 
         return $sourceItemSelections;
+    }
+
+    /**
+     * @param $sortedSourceCodes
+     * @param $returnItemSku
+     * @param $returnQty
+     * @return \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getSourceSelectionItem(
+        $sortedSourceCodes,
+        $returnItemSku,
+        $returnQty
+    ): \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterface {
+
+        $sourceItem = $this->getSourceItemBySourceCodeAndSku->execute(current($sortedSourceCodes)->getSourceCode(), $returnItemSku);
+
+        return $this->sourceSelectionItemFactory->create([
+            'sourceCode' => $sourceItem->getSourceCode(),
+            'sku' => $sourceItem->getSku(),
+            'qtyToDeduct' => $returnQty * (-1),
+            'qtyAvailable' => $sourceItem->getQuantity()
+        ]);
     }
 
     protected function getEnabledSourcesOrderedByPriorityByStockId(int $stockId): array
