@@ -8,12 +8,12 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
@@ -36,12 +36,12 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
@@ -64,12 +64,12 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
@@ -92,12 +92,12 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture

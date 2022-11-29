@@ -25,12 +25,12 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
@@ -63,12 +63,12 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture

@@ -8,12 +8,12 @@ class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockRese
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadConfigurableProductQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture

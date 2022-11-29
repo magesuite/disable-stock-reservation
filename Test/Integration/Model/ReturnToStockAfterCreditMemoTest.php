@@ -36,12 +36,12 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
     }
 
     /**
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
