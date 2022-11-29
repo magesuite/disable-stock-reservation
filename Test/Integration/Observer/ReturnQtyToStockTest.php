@@ -8,12 +8,12 @@ class ReturnQtyToStockTest extends \MageSuite\DisableStockReservation\Test\Integ
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
+     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadProductsFixture
      * @magentoDataFixture loadSourcesFixture
      * @magentoDataFixture loadStocksFixture
      * @magentoDataFixture loadStockSourceLinksFixture
      * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadWebsiteWithStoresFixture
      * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
      * @magentoDataFixture loadQuoteFixture
      * @magentoDataFixture loadReindexInventoryFixture
