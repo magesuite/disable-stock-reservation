@@ -4,25 +4,13 @@ namespace MageSuite\DisableStockReservation\Model;
 
 class InventoryRequestFromOrderFactory
 {
-    /**
-     * @var \Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface
-     */
-    protected $stockByWebsiteIdResolver;
+    protected \Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver;
 
-    /**
-     * @var \Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory
-     */
-    protected $itemRequestFactory;
+    protected \Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory $itemRequestFactory;
 
-    /**
-     * @var \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory
-     */
-    protected $inventoryRequestFactory;
+    protected \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory $inventoryRequestFactory;
 
-    /**
-     * @var \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation
-     */
-    protected $itemValidation;
+    protected \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation $itemValidation;
 
     public function __construct(
         \Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
@@ -43,37 +31,47 @@ class InventoryRequestFromOrderFactory
 
         $processedItems = [];
         foreach ($order->getItems() as $orderItem) {
-            $itemSku = $orderItem->getSku() ?: $orderItem->getProduct()->getSku();
-            $qtyOrdered = $orderItem->getQtyOrdered();
-
-            if (! $this->itemValidation->validate($orderItem)) {
+            if (!$this->itemValidation->validate($orderItem)) {
                 continue;
             }
 
-            if (!isset($processedItems[$itemSku])) {
-                $processedItems[$itemSku] = [
-                    'sku' => '',
-                    'qty' => 0
-                ];
-            }
-
-            $processedItems[$itemSku]['sku'] = $itemSku;
-            $processedItems[$itemSku]['qty'] += $qtyOrdered;
+            $itemSku = $orderItem->getSku() ?: $orderItem->getProduct()->getSku();
+            $processedItems[$itemSku] = $this->buildProcessedItem($processedItems, $itemSku, $orderItem);
         }
 
         return $this->inventoryRequestFactory->create([
             'stockId' => $stockId,
-            'items' => $this->getItemRequest($processedItems)
+            'items' => $this->getItemsRequest($processedItems)
         ]);
     }
 
-    protected function getItemRequest($items)
+    public function buildProcessedItem($processedItems, $itemSku, $orderItem)
+    {
+        $processedItem = $processedItems[$itemSku] ?? [];
+
+        if (empty($processedItem)) {
+            $processedItem = [
+                'sku' => $itemSku,
+                'qty' => 0
+            ];
+        }
+
+        $processedItem['qty'] += $orderItem->getQtyOrdered();
+        return $processedItem;
+    }
+
+    protected function getItemsRequest($items): array
     {
         $requestItems = [];
         foreach ($items as $itemRequestData) {
-            $requestItems[] = $this->itemRequestFactory->create($itemRequestData);
+            $requestItems[] = $this->createRequestItem($itemRequestData);
         }
 
         return $requestItems;
+    }
+
+    public function createRequestItem($itemRequestData)
+    {
+        return $this->itemRequestFactory->create($itemRequestData);
     }
 }
