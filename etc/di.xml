@@ -1,16 +1,19 @@
 <?xml version="1.0"?>
 <config>
-    <type name="\Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface">
-        <plugin name="PreventAddingDefaultCompensation" type="\MageSuite\DisableStockReservation\Plugin\InventorySalesApi\Api\PreventAddingDefaultCompensation" sortOrder="2" disabled="false" />
+    <type name="Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface">
+        <plugin name="prevent_adding_default_compensation" type="MageSuite\DisableStockReservation\Plugin\InventorySalesApi\Api\PreventAddingDefaultCompensation" sortOrder="2" disabled="false" />
     </type>
-    <type name="\Magento\InventorySourceSelectionApi\Model\GetInStockSourceItemsBySkusAndSortedSource">
-        <plugin name="CastSkusToStrings" type="\MageSuite\DisableStockReservation\Plugin\InventorySourceSelectionApi\Model\CastSkusToStrings" sortOrder="1" disabled="false" />
+    <type name="Magento\InventorySourceSelectionApi\Model\GetInStockSourceItemsBySkusAndSortedSource">
+        <plugin name="cast_skus_to_strings" type="MageSuite\DisableStockReservation\Plugin\InventorySourceSelectionApi\Model\CastSkusToStrings" sortOrder="1" disabled="false" />
     </type>
-    <type name="\Magento\Sales\Api\OrderManagementInterface">
+    <type name="Magento\Sales\Api\OrderManagementInterface">
         <plugin name="inventory_reservations_placement" disabled="true" />
     </type>
     <type name="Magento\SalesInventory\Model\Order\ReturnProcessor">
         <plugin name="process_return_product_qty_on_credit_memo" disabled="true" />
+    </type>
+    <type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
+        <plugin name="deduct_source_item_quantity_on_refund" disabled="true" />
     </type>
     <type name="Magento\CatalogInventory\Model\StockManagement">
         <plugin name="process_back_item_qty" disabled="true" />
