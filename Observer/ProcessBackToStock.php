@@ -4,58 +4,33 @@ namespace MageSuite\DisableStockReservation\Observer;
 
 class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
 {
-    /**
-     * @var \Magento\InventorySales\Model\StockByWebsiteIdResolver
-     */
-    protected $stockByWebsiteIdResolver;
-
-    /**
-     * @var \Magento\Inventory\Model\Source\Command\GetSourcesAssignedToStockOrderedByPriority
-     */
-    protected $getSourcesAssignedToStockOrderedByPriority;
-
-    /**
-     * @var \Magento\InventorySourceDeductionApi\Model\GetSourceItemBySourceCodeAndSku
-     */
-    protected $getSourceItemBySourceCodeAndSku;
-
-    /**
-     * @var \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterfaceFactory
-     */
-    protected $sourceSelectionItemFactory;
-
-    /**
-     * @var \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterfaceFactory
-     */
-    protected $sourceSelectionResultFactory;
-
-    protected $getSourceDeductionRequestFromSourceSelection;
-
-    protected $sourceDeductionService;
-
-    /**
-     * @var \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation
-     */
-    protected $itemValidation;
+    protected \MageSuite\DisableStockReservation\Model\CancelProcessor\GetSourceDeductionRequestFromSourceSelection $getSourceDeductionRequestFromSourceSelection;
+    protected \MageSuite\DisableStockReservation\Service\GetItemsToReturn $getItemsToReturn;
+    protected \Magento\InventorySales\Model\StockByWebsiteIdResolver $stockByWebsiteIdResolver;
+    protected \Magento\InventorySourceDeductionApi\Model\GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku;
+    protected \Magento\InventorySourceDeductionApi\Model\SourceDeductionService $sourceDeductionService;
+    protected \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterfaceFactory $sourceSelectionItemFactory;
+    protected \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterfaceFactory $sourceSelectionResultFactory;
+    protected \Magento\Inventory\Model\Source\Command\GetSourcesAssignedToStockOrderedByPriority $getSourcesAssignedToStockOrderedByPriority;
 
     public function __construct(
+        \MageSuite\DisableStockReservation\Model\CancelProcessor\GetSourceDeductionRequestFromSourceSelection $getSourceDeductionRequestFromSourceSelection,
+        \MageSuite\DisableStockReservation\Service\GetItemsToReturn $getItemsToReturn,
         \Magento\InventorySales\Model\StockByWebsiteIdResolver $stockByWebsiteIdResolver,
-        \Magento\Inventory\Model\Source\Command\GetSourcesAssignedToStockOrderedByPriority $getSourcesAssignedToStockOrderedByPriority,
         \Magento\InventorySourceDeductionApi\Model\GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku,
+        \Magento\InventorySourceDeductionApi\Model\SourceDeductionService $sourceDeductionService,
         \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterfaceFactory $sourceSelectionItemFactory,
         \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterfaceFactory $sourceSelectionResultFactory,
-        \MageSuite\DisableStockReservation\Model\CancelProcessor\GetSourceDeductionRequestFromSourceSelection $getSourceDeductionRequestFromSourceSelection,
-        \Magento\InventorySourceDeductionApi\Model\SourceDeductionService $sourceDeductionService,
-        \MageSuite\DisableStockReservation\Model\Sales\Order\ItemValidation $itemValidation
+        \Magento\Inventory\Model\Source\Command\GetSourcesAssignedToStockOrderedByPriority $getSourcesAssignedToStockOrderedByPriority
     ) {
-        $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
-        $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
+        $this->getItemsToReturn = $getItemsToReturn;
+        $this->getSourceDeductionRequestFromSourceSelection = $getSourceDeductionRequestFromSourceSelection;
         $this->getSourceItemBySourceCodeAndSku = $getSourceItemBySourceCodeAndSku;
+        $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
+        $this->sourceDeductionService = $sourceDeductionService;
         $this->sourceSelectionItemFactory = $sourceSelectionItemFactory;
         $this->sourceSelectionResultFactory = $sourceSelectionResultFactory;
-        $this->getSourceDeductionRequestFromSourceSelection = $getSourceDeductionRequestFromSourceSelection;
-        $this->sourceDeductionService = $sourceDeductionService;
-        $this->itemValidation = $itemValidation;
+        $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
@@ -65,7 +40,7 @@ class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
         $websiteId = $order->getStore()->getWebsiteId();
         $stockId = $this->stockByWebsiteIdResolver->execute($websiteId)->getStockId();
 
-        $itemsToReturn = $this->getItemsToReturn($order);
+        $itemsToReturn = $this->getItemsToReturn->execute($order);
         $sortedSources = $this->getEnabledSourcesOrderedByPriorityByStockId($stockId);
 
         $sourceItemSelections = $this->getSourceSelectionItems($itemsToReturn, $sortedSources);
@@ -80,20 +55,6 @@ class ProcessBackToStock implements \Magento\Framework\Event\ObserverInterface
         foreach ($sourceDeductionRequests as $sourceDeductionRequest) {
             $this->sourceDeductionService->execute($sourceDeductionRequest);
         }
-    }
-
-    protected function getItemsToReturn(\Magento\Sales\Model\Order $order)
-    {
-        $itemsSkus = [];
-        foreach ($order->getItems() as $orderItem) {
-            if (! $this->itemValidation->validate($orderItem)) {
-                continue;
-            }
-
-            $itemsSkus[$orderItem->getSku()] = $orderItem->getQtyOrdered();
-        }
-
-        return $itemsSkus;
     }
 
     /**
