@@ -21,4 +21,7 @@
     <type name="Magento\Sales\Model\ResourceModel\Order">
         <plugin name="authorization" disabled="true" />
     </type>
+    <type name="Magento\InventoryShippingAdminUi\Model\IsOrderSourceManageable">
+        <plugin name="skip_source_selection" type="MageSuite\DisableStockReservation\Plugin\Magento\InventoryShippingAdminUi\Model\IsOrderSourceManageable\SkipSourceSelection" sortOrder="10"/>
+    </type>
 </config>
