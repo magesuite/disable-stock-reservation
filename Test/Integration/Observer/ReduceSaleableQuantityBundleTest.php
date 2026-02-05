@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\DisableStockReservation\Test\Integration\Observer;
 
 class ReduceSaleableQuantityBundleTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
@@ -8,13 +10,13 @@ class ReduceSaleableQuantityBundleTest extends \MageSuite\DisableStockReservatio
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadBundleSources
-     * @magentoDataFixture loadProductBundle
-     * @magentoDataFixture loadQuoteFixture
-     * @magentoDataFixture loadReindexInventoryFixture
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/source_items_for_bundle_children.php
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/bundle_product.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testReduceQtyAfterBundleProductOrder()
+    public function testReduceQtyAfterBundleProductOrder(): void
     {
         $itemsToBuy = [
             'SKU-BUNDLE-1' => ['qty' => 1, 'options_qty' => [1, 1]], // SKU-1 qty 1 | SKU-3 qty 1
@@ -47,7 +49,7 @@ class ReduceSaleableQuantityBundleTest extends \MageSuite\DisableStockReservatio
         $this->assertEquals(28, $qtyInStockSku3);
     }
 
-    protected function placeBundleProductOrder($cart, $itemsToBuy)
+    protected function placeBundleProductOrder(\Magento\Quote\Api\Data\CartInterface $cart, array $itemsToBuy): void
     {
         /** @var \Magento\Quote\Api\CartRepositoryInterface $cartRepository */
         $cartRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\Magento\Quote\Api\CartRepositoryInterface::class);
@@ -86,25 +88,5 @@ class ReduceSaleableQuantityBundleTest extends \MageSuite\DisableStockReservatio
 
         $cartRepository->save($cart);
         $cartManagement->placeOrder($cart->getId());
-    }
-
-    public static function loadProductBundle()
-    {
-        include __DIR__ . "/../_files/bundle_product.php";
-    }
-
-    public static function loadOrderBundleProduct()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-shipping/Test/_files/order_bundle_products.php";
-    }
-
-    public static function loadBundleSources()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-shipping/Test/_files/source_items_for_bundle_children.php";
-    }
-
-    public static function loadQuote()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/quote.php";
     }
 }

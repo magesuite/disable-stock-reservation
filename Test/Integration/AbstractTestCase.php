@@ -1,78 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\DisableStockReservation\Test\Integration;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AbstractTestCase extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $registry;
-
-    /**
-     * @var \Magento\Framework\App\ObjectManager
-     */
-    protected $objectManager;
-
-    /**
-     * @var \Magento\Store\Model\StoreManager
-     */
-    protected $storeManager;
-
-    /**
-     * @var \Magento\Quote\Api\CartManagementInterface
-     */
-    protected $cartManagement;
-
-    /**
-     * @var \Magento\Quote\Api\CartRepositoryInterface
-     */
-    protected $cartRepository;
-
-    /**
-     * @var \Magento\Catalog\Model\ProductRepository
-     */
-    protected $productRepository;
-
-    /**
-     * @var \Magento\Sales\Api\OrderManagementInterface
-     */
-    protected $orderManagement;
-
-    /**
-     * @var \Magento\Sales\Model\OrderRepository
-     */
-    protected $orderRepository;
-
-    /**
-     * @var \Magento\Quote\Api\CartRepositoryInterface
-     */
-    protected $searchCriteriaBuilder;
-
-    /**
-     * @var \Magento\Inventory\Model\StockRepository
-     */
-    protected $stockRepository;
-
-    /**
-     * @var \Magento\Store\Model\StoreRepository
-     */
-    protected $storeRepository;
-
-    /**
-     * @var \Magento\Quote\Api\Data\CartItemInterfaceFactory
-     */
-    protected $cartItemFactory;
-
-    /**
-     * @var \Magento\InventoryApi\Api\GetSourceItemsBySkuInterface
-     */
-    protected $getSourceItemsBySkuInterface;
-
-    /**
-     * @var \Magento\InventorySales\Model\GetAssignedSalesChannelsForStock
-     */
-    protected $getAssignedSalesChannelsForStock;
+    protected \Magento\Framework\Registry $registry;
+    protected \Magento\Framework\App\ObjectManager $objectManager;
+    protected \Magento\Store\Model\StoreManager $storeManager;
+    protected \Magento\Quote\Api\CartManagementInterface $cartManagement;
+    protected \Magento\Quote\Api\CartRepositoryInterface $cartRepository;
+    protected \Magento\Catalog\Model\ProductRepository $productRepository;
+    protected \Magento\Sales\Api\OrderManagementInterface $orderManagement;
+    protected \Magento\Sales\Model\OrderRepository $orderRepository;
+    protected \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder;
+    protected \Magento\Inventory\Model\StockRepository $stockRepository;
+    protected \Magento\Store\Model\StoreRepository $storeRepository;
+    protected \Magento\Quote\Api\Data\CartItemInterfaceFactory $cartItemFactory;
+    protected \Magento\InventoryApi\Api\GetSourceItemsBySkuInterface $getSourceItemsBySkuInterface;
+    protected \Magento\InventorySales\Model\GetAssignedSalesChannelsForStock $getAssignedSalesChannelsForStock;
 
     public function setUp(): void
     {
@@ -94,7 +44,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         $this->getAssignedSalesChannelsForStock = $this->objectManager->create(\Magento\InventorySales\Model\GetAssignedSalesChannelsForStock::class);
     }
 
-    protected function placeOrder($sku, $quoteItemQty, $cart)
+    protected function placeOrder(string $sku, int $quoteItemQty, \Magento\Quote\Api\Data\CartInterface $cart): int
     {
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
@@ -105,7 +55,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         return $orderId;
     }
 
-    protected function getCartByStockId($stockId)
+    protected function getCartByStockId(int $stockId): \Magento\Quote\Api\Data\CartInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('reserved_order_id', 'test_order_1')
@@ -128,7 +78,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         return $cart;
     }
 
-    protected function getCartItem(\Magento\Catalog\Api\Data\ProductInterface $product, float $quoteItemQty, int $cartId)
+    protected function getCartItem(\Magento\Catalog\Api\Data\ProductInterface $product, float $quoteItemQty, int $cartId): object
     {
         $cartItem = $this->cartItemFactory->create(
             [
@@ -145,7 +95,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         return $cartItem;
     }
 
-    protected function deleteOrderById(int $orderId)
+    protected function deleteOrderById(int $orderId): void
     {
         $this->registry->unregister('isSecureArea');
         $this->registry->register('isSecureArea', true);
@@ -153,99 +103,5 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         $this->orderRepository->delete($this->orderRepository->get($orderId));
         $this->registry->unregister('isSecureArea');
         $this->registry->register('isSecureArea', false);
-    }
-
-    public static function loadProductsFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/products.php";
-    }
-
-    public static function loadSourcesFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/sources.php";
-    }
-
-    public static function loadStocksFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/stocks.php";
-    }
-
-    public static function loadStockSourceLinksFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/stock_source_links.php";
-    }
-
-    public static function loadSourceItemsFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/source_items.php";
-    }
-
-    public static function loadWebsiteWithStoresFixture()
-    {
-        include __DIR__ . "/_files/websites_with_stores.php";
-    }
-
-    public static function loadStockWebsiteSalesChannelsFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels.php";
-    }
-
-    public static function loadQuoteFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/quote.php";
-    }
-
-    public static function loadReindexInventoryFixture()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
-    }
-
-    /**
-     * Rollbacks
-     */
-
-    public static function loadProductsFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/products_rollback.php";
-    }
-
-    public static function loadSourcesFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/sources_rollback.php";
-    }
-
-    public static function loadStocksFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/stocks_rollback.php";
-    }
-
-    public static function loadStockSourceLinksFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/stock_source_links_rollback.php";
-    }
-
-    public static function loadSourceItemsFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-api/Test/_files/source_items_rollback.php";
-    }
-
-    public static function loadStockWebsiteSalesChannelsFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/stock_website_sales_channels_rollback.php";
-    }
-
-    public static function loadWebsiteWithStoresFixtureRollback()
-    {
-        include __DIR__ . "/_files/websites_with_stores_rollback.php";
-    }
-
-    public static function loadQuoteFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-sales-api/Test/_files/quote_rollback.php";
-    }
-
-    public static function loadReindexInventoryFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\DisableStockReservation\Test\Integration\Observer;
 
 class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
@@ -8,17 +10,17 @@ class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockRese
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
-     * @magentoDataFixture loadWebsiteWithStoresFixture
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadSourcesFixture
-     * @magentoDataFixture loadStocksFixture
-     * @magentoDataFixture loadStockSourceLinksFixture
-     * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
-     * @magentoDataFixture loadConfigurableProductQuoteFixture
-     * @magentoDataFixture loadReindexInventoryFixture
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento/ConfigurableProduct/_files/quote_with_configurable_product.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testReduceQtyAfterOrderForConfigurableProduct()
+    public function testReduceQtyAfterOrderForConfigurableProduct(): void
     {
         $reservedOrderId = 'test_cart_with_configurable';
         $cart = $this->getCartByReservedId($reservedOrderId);
@@ -32,7 +34,7 @@ class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockRese
         $this->assertEquals(1000, $qtyInStock);
     }
 
-    protected function getCartByReservedId($reservedOrderId)
+    protected function getCartByReservedId(int $reservedOrderId): object
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('reserved_order_id', $reservedOrderId)
@@ -43,7 +45,7 @@ class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockRese
         return $this->cartRepository->get($cart->getId());
     }
 
-    protected function updateCart($cart)
+    protected function updateCart(\Magento\Quote\Api\Data\CartInterface $cart): void
     {
         $cart->setCustomerEmail('admin@example.com');
         $cart->setCustomerIsGuest(true);
@@ -71,15 +73,5 @@ class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockRese
         $cart->getShippingAddress()->setCollectShippingRates(true);
         $cart->getShippingAddress()->collectShippingRates();
         $this->cartRepository->save($cart);
-    }
-
-    public static function loadConfigurableProductQuoteFixture()
-    {
-        include __DIR__ . "/../../../../../../dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/quote_with_configurable_product.php";
-    }
-
-    public static function loadConfigurableProductQuoteFixtureRollback()
-    {
-        include __DIR__ . "/../../../../../../dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/quote_with_configurable_product_rollback.php";
     }
 }
