@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\DisableStockReservation\Test\Integration\Observer;
 
 class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
@@ -8,17 +10,17 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
-     * @magentoDataFixture loadWebsiteWithStoresFixture
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadSourcesFixture
-     * @magentoDataFixture loadStocksFixture
-     * @magentoDataFixture loadStockSourceLinksFixture
-     * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
-     * @magentoDataFixture loadQuoteFixture
-     * @magentoDataFixture loadReindexInventoryFixture
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testReduceQtyAfterOrderLeavingMoreQtyThanRequiredForNextOrder()
+    public function testReduceQtyAfterOrderLeavingMoreQtyThanRequiredForNextOrder(): void
     {
         $sku = 'SKU-2';
         $qty = 2;
@@ -36,17 +38,17 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
-     * @magentoDataFixture loadWebsiteWithStoresFixture
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadSourcesFixture
-     * @magentoDataFixture loadStocksFixture
-     * @magentoDataFixture loadStockSourceLinksFixture
-     * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
-     * @magentoDataFixture loadQuoteFixture
-     * @magentoDataFixture loadReindexInventoryFixture
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testReduceQtyAfterOrderLeavingLessQtyThanRequiredForNextOrder()
+    public function testReduceQtyAfterOrderLeavingLessQtyThanRequiredForNextOrder(): void
     {
         $sku = 'SKU-2';
         $qty = 3;
@@ -64,17 +66,17 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
-     * @magentoDataFixture loadWebsiteWithStoresFixture
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadSourcesFixture
-     * @magentoDataFixture loadStocksFixture
-     * @magentoDataFixture loadStockSourceLinksFixture
-     * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
-     * @magentoDataFixture loadQuoteFixture
-     * @magentoDataFixture loadReindexInventoryFixture
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testReduceQtyAfterOrderLeavingNoneQtyInTheStock()
+    public function testReduceQtyAfterOrderLeavingNoneQtyInTheStock(): void
     {
         $sku = 'SKU-2';
         $qty = 3;
@@ -92,17 +94,17 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
      * @magentoDbIsolation  disabled
      * @magentoAppIsolation enabled
      *
-     * @magentoDataFixture loadWebsiteWithStoresFixture
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadSourcesFixture
-     * @magentoDataFixture loadStocksFixture
-     * @magentoDataFixture loadStockSourceLinksFixture
-     * @magentoDataFixture loadSourceItemsFixture
-     * @magentoDataFixture loadStockWebsiteSalesChannelsFixture
-     * @magentoDataFixture loadQuoteFixture
-     * @magentoDataFixture loadReindexInventoryFixture
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testThrowExceptionWhenTryingToOrderQtyGraterThenInStock()
+    public function testThrowExceptionWhenTryingToOrderQtyGraterThenInStock(): void
     {
         $sku = 'SKU-2';
         $qty = 6;
