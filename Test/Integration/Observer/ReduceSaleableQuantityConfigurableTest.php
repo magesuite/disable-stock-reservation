@@ -34,7 +34,7 @@ class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockRese
         $this->assertEquals(1000, $qtyInStock);
     }
 
-    protected function getCartByReservedId(int $reservedOrderId): object
+    protected function getCartByReservedId(string $reservedOrderId): object
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('reserved_order_id', $reservedOrderId)
