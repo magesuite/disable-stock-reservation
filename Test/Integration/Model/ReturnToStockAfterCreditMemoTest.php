@@ -8,10 +8,10 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
 {
     protected const DEFAULT_STORE_ID = 1;
 
-    protected \Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity $getReservationQuantity;
-    protected \Magento\Sales\Model\Service\InvoiceService $invoiceService;
-    protected \Magento\Sales\Model\Service\CreditmemoService $creditMemoService;
-    protected \Magento\Sales\Model\Order\CreditmemoFactory $creditMemoFactory;
+    protected ?\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity $getReservationQuantity;
+    protected ?\Magento\Sales\Model\Service\InvoiceService $invoiceService;
+    protected ?\Magento\Sales\Model\Service\CreditmemoService $creditMemoService;
+    protected ?\Magento\Sales\Model\Order\CreditmemoFactory $creditMemoFactory;
 
     public function setUp(): void
     {
@@ -48,7 +48,7 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
         $order = $this->orderRepository->get($orderId);
         $orderItems = $order->getItems();
         $orderItem = reset($orderItems);
-        
+
         $data = ['qtys' => [$orderItem->getId() => $orderItem->getQtyOrdered()]];
         $this->storeManager->setCurrentStore('default');
         $invoice = $this->invoiceService->prepareInvoice($order, [$orderItem->getId() => $orderItem->getQtyOrdered()]);
