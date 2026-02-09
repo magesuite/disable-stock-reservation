@@ -6,9 +6,8 @@ namespace MageSuite\DisableStockReservation\Test\Integration\Plugin\InventorySal
 
 class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
 {
-    protected \Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity $getReservationQuantity;
-
-    protected \Magento\Sales\Model\Convert\Order $convertOrder;
+    protected ?\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity $getReservationQuantity;
+    protected ?\Magento\Sales\Model\Convert\Order $convertOrder;
 
     public function setUp(): void
     {

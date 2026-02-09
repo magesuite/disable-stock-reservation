@@ -6,7 +6,7 @@ namespace MageSuite\DisableStockReservation\Test\Integration\Plugin\InventorySal
 
 class CompensateRegisteredQuantitiesTest extends \MageSuite\DisableStockReservation\Test\Integration\AbstractTestCase
 {
-    protected \Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity $getReservationQuantity;
+    protected ?\Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity $getReservationQuantity;
 
     public function setUp(): void
     {

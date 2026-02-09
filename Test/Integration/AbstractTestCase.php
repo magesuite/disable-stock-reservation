@@ -9,20 +9,20 @@ namespace MageSuite\DisableStockReservation\Test\Integration;
  */
 class AbstractTestCase extends \PHPUnit\Framework\TestCase
 {
-    protected \Magento\Framework\Registry $registry;
-    protected \Magento\Framework\App\ObjectManager $objectManager;
-    protected \Magento\Store\Model\StoreManager $storeManager;
-    protected \Magento\Quote\Api\CartManagementInterface $cartManagement;
-    protected \Magento\Quote\Api\CartRepositoryInterface $cartRepository;
-    protected \Magento\Catalog\Model\ProductRepository $productRepository;
-    protected \Magento\Sales\Api\OrderManagementInterface $orderManagement;
-    protected \Magento\Sales\Model\OrderRepository $orderRepository;
-    protected \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder;
-    protected \Magento\Inventory\Model\StockRepository $stockRepository;
-    protected \Magento\Store\Model\StoreRepository $storeRepository;
-    protected \Magento\Quote\Api\Data\CartItemInterfaceFactory $cartItemFactory;
-    protected \Magento\InventoryApi\Api\GetSourceItemsBySkuInterface $getSourceItemsBySkuInterface;
-    protected \Magento\InventorySales\Model\GetAssignedSalesChannelsForStock $getAssignedSalesChannelsForStock;
+    protected ?\Magento\Framework\Registry $registry;
+    protected ?\Magento\Framework\App\ObjectManager $objectManager;
+    protected ?\Magento\Store\Model\StoreManager $storeManager;
+    protected ?\Magento\Quote\Api\CartManagementInterface $cartManagement;
+    protected ?\Magento\Quote\Api\CartRepositoryInterface $cartRepository;
+    protected ?\Magento\Catalog\Model\ProductRepository $productRepository;
+    protected ?\Magento\Sales\Api\OrderManagementInterface $orderManagement;
+    protected ?\Magento\Sales\Model\OrderRepository $orderRepository;
+    protected ?\Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder;
+    protected ?\Magento\Inventory\Model\StockRepository $stockRepository;
+    protected ?\Magento\Store\Model\StoreRepository $storeRepository;
+    protected ?\Magento\Quote\Api\Data\CartItemInterfaceFactory $cartItemFactory;
+    protected ?\Magento\InventoryApi\Api\GetSourceItemsBySkuInterface $getSourceItemsBySkuInterface;
+    protected ?\Magento\InventorySales\Model\GetAssignedSalesChannelsForStock $getAssignedSalesChannelsForStock;
 
     public function setUp(): void
     {
