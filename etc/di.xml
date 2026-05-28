@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<config>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface">
         <plugin name="prevent_adding_default_compensation" type="MageSuite\DisableStockReservation\Plugin\InventorySalesApi\Api\PreventAddingDefaultCompensation" sortOrder="2" disabled="false" />
     </type>
@@ -17,9 +17,6 @@
     </type>
     <type name="Magento\CatalogInventory\Model\StockManagement">
         <plugin name="process_back_item_qty" disabled="true" />
-    </type>
-    <type name="Magento\Sales\Model\ResourceModel\Order">
-        <plugin name="authorization" disabled="true" />
     </type>
     <type name="Magento\InventoryShippingAdminUi\Model\IsOrderSourceManageable">
         <plugin name="skip_source_selection" type="MageSuite\DisableStockReservation\Plugin\Magento\InventoryShippingAdminUi\Model\IsOrderSourceManageable\SkipSourceSelection" sortOrder="10"/>
