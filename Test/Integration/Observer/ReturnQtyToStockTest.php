@@ -82,13 +82,4 @@ class ReturnQtyToStockTest extends \MageSuite\DisableStockReservation\Test\Integ
             $this->fail(sprintf('Order cancellation failed: An exception occurred: %s', $e->getMessage()));
         }
     }
-
-    protected function reindexStock()
-    {
-        /** @var \Magento\Indexer\Model\IndexerFactory $indexerFactory */
-        $indexerFactory = $this->objectManager->create(\Magento\Indexer\Model\IndexerFactory::class);
-        $indexer = $indexerFactory->create();
-        $indexer->load('inventory');
-        $indexer->reindexAll();
-    }
 }
