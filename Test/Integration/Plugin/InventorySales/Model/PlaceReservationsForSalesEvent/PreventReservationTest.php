@@ -8,47 +8,21 @@ namespace MageSuite\DisableStockReservation\Test\Integration\Plugin\InventorySal
     \Magento\TestFramework\Fixture\DbIsolation(true),
     \Magento\TestFramework\Fixture\AppArea('adminhtml')
 ]
-class PreventMollieReservationTest extends \PHPUnit\Framework\TestCase
+class PreventReservationTest extends \PHPUnit\Framework\TestCase
 {
-    protected const MOLLIE_RESERVATION_CLASS = 'Mollie\Payment\Service\Order\Uncancel\OrderReservation';
     protected const SKU = 'simple';
 
     protected ?\Magento\Framework\ObjectManagerInterface $objectManager = null;
 
     protected function setUp(): void
     {
-        if (!class_exists(self::MOLLIE_RESERVATION_CLASS)) {
-            $this->markTestSkipped('Mollie module is not installed - nothing to prevent.');
-        }
-
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
     }
 
     #[
         \Magento\TestFramework\Fixture\DataFixture('Magento/Sales/_files/order.php')
     ]
-    public function testReservationTriggeredByMollieIsPrevented(): void
-    {
-        $order = $this->getOrder('100000001');
-        $orderId = (int)$order->getEntityId();
-        $orderItem = current($order->getAllVisibleItems());
-
-        $countBefore = $this->getReservationCountForOrder($orderId);
-
-        $mollieReservation = $this->objectManager->create(self::MOLLIE_RESERVATION_CLASS);
-        $mollieReservation->execute($orderItem);
-
-        $this->assertSame(
-            $countBefore,
-            $this->getReservationCountForOrder($orderId),
-            'A reservation triggered by Mollie must be blocked - no row may be added.'
-        );
-    }
-
-    #[
-        \Magento\TestFramework\Fixture\DataFixture('Magento/Sales/_files/order.php')
-    ]
-    public function testReservationNotTriggeredByMollieIsAllowed(): void
+    public function testReservationIsPrevented(): void
     {
         $order = $this->getOrder('100000001');
         $orderId = (int)$order->getEntityId();
@@ -57,10 +31,10 @@ class PreventMollieReservationTest extends \PHPUnit\Framework\TestCase
 
         $this->placeReservationDirectly($order);
 
-        $this->assertGreaterThan(
+        $this->assertSame(
             $countBefore,
             $this->getReservationCountForOrder($orderId),
-            'A reservation not originating from Mollie must pass through and be appended.'
+            'Every reservation must be blocked - no row may be added.'
         );
     }
 
