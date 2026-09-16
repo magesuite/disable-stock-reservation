@@ -38,7 +38,13 @@ class GetItemsToReturn
                 continue;
             }
 
-            $itemsSkus[$orderItem->getSku()] = $orderItem->getQtyOrdered();
+            $qtyToReturn = $orderItem->getQtyOrdered() - (float)$orderItem->getQtyBackordered();
+
+            if ($qtyToReturn <= 0) {
+                continue;
+            }
+
+            $itemsSkus[$orderItem->getSku()] = $qtyToReturn;
         }
 
         return $itemsSkus;
