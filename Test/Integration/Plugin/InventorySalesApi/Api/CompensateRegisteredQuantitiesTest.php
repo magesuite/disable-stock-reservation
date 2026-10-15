@@ -35,7 +35,8 @@ class CompensateRegisteredQuantitiesTest extends \MageSuite\DisableStockReservat
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $qty = $this->getReservationQuantity->execute($sku, $stockId);
