@@ -28,7 +28,8 @@ class ReturnBackorderedQtyToStockTest extends \MageSuite\DisableStockReservation
         $sourceCode = 'eu-1';
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $this->assertEquals(
@@ -73,7 +74,8 @@ class ReturnBackorderedQtyToStockTest extends \MageSuite\DisableStockReservation
         $this->allowBackorders($sku);
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $this->assertEquals(0, $this->getSourceQty($sku, $sourceCode), 'Only the available 5 may be deducted.');
@@ -111,7 +113,8 @@ class ReturnBackorderedQtyToStockTest extends \MageSuite\DisableStockReservation
         $stockId = 10;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
 
         $getItemsToReturn = $this->objectManager->create(\MageSuite\DisableStockReservation\Service\GetItemsToReturn::class);
 
