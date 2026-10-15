@@ -37,7 +37,8 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $order = $this->orderRepository->get($orderId);
 
         $shipment = $this->convertOrder->toShipment($order);
@@ -75,7 +76,8 @@ class PreventAddingDefaultCompensationTest extends \MageSuite\DisableStockReserv
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $order = $this->orderRepository->get($orderId);
 
         $shipment = $this->convertOrder->toShipment($order);

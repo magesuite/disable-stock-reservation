@@ -27,7 +27,8 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
@@ -55,7 +56,8 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
@@ -83,7 +85,8 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
@@ -113,6 +116,7 @@ class ReduceSaleableQuantityTest extends \MageSuite\DisableStockReservation\Test
         $cart = $this->getCartByStockId($stockId);
 
         $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
-        $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $this->placeOrder($cart);
     }
 }

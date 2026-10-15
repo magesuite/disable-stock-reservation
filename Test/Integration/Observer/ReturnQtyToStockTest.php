@@ -27,7 +27,8 @@ class ReturnQtyToStockTest extends \MageSuite\DisableStockReservation\Test\Integ
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
@@ -62,7 +63,8 @@ class ReturnQtyToStockTest extends \MageSuite\DisableStockReservation\Test\Integ
         $stockId = 30;
 
         $cart = $this->getCartByStockId($stockId);
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $order = $this->orderRepository->get($orderId);

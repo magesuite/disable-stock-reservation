@@ -44,7 +44,8 @@ class ReturnToStockAfterCreditMemoTest extends \MageSuite\DisableStockReservatio
 
         $cart = $this->getCartByStockId($stockId);
         $this->storeManager->setCurrentStore('default');
-        $orderId = $this->placeOrder($sku, $qty, $cart);
+        $this->addItemToCart($sku, $qty, $cart);
+        $orderId = $this->placeOrder($cart);
         $order = $this->orderRepository->get($orderId);
         $orderItems = $order->getItems();
         $orderItem = reset($orderItems);

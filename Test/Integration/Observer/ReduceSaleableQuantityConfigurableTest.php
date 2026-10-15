@@ -24,7 +24,7 @@ class ReduceSaleableQuantityConfigurableTest extends \MageSuite\DisableStockRese
     {
         $reservedOrderId = 'test_cart_with_configurable';
         $cart = $this->getCartByReservedId($reservedOrderId);
-        $orderId = $this->placeOrder('configurable', 1, $cart);
+        $orderId = $this->placeOrder($cart);
         $this->assertNotNull($orderId);
 
         $qtyInStock = current($this->getSourceItemsBySkuInterface->execute('simple_10'))->getQuantity();

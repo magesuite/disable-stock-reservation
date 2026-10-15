@@ -44,15 +44,17 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         $this->getAssignedSalesChannelsForStock = $this->objectManager->create(\Magento\InventorySales\Model\GetAssignedSalesChannelsForStock::class);
     }
 
-    protected function placeOrder(string $sku, int $quoteItemQty, \Magento\Quote\Api\Data\CartInterface $cart): int
+    protected function placeOrder(\Magento\Quote\Api\Data\CartInterface $cart): int
+    {
+        return (int) $this->cartManagement->placeOrder($cart->getId());
+    }
+
+    protected function addItemToCart(string $sku, int $quoteItemQty, \Magento\Quote\Api\Data\CartInterface $cart): void
     {
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);
-
-        $orderId = $this->cartManagement->placeOrder($cart->getId());
-        return $orderId;
     }
 
     protected function getCartByStockId(int $stockId): \Magento\Quote\Api\Data\CartInterface
