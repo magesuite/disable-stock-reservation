@@ -84,4 +84,70 @@ class ReturnQtyToStockTest extends \MageSuite\DisableStockReservation\Test\Integ
             $this->fail(sprintf('Order cancellation failed: An exception occurred: %s', $e->getMessage()));
         }
     }
+
+    /**
+     * @magentoDbIsolation  disabled
+     * @magentoAppIsolation enabled
+     *
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     */
+    public function testReturnOnlyNotInvoicedQtyAfterPartiallyInvoicedOrderCancel(): void
+    {
+        $sku = 'SKU-2';
+        $stockId = 30;
+
+        $cart = $this->getCartByStockId($stockId);
+        $this->addItemToCart($sku, 2, $cart);
+        $orderId = $this->placeOrder($cart);
+
+        $order = $this->orderRepository->get($orderId);
+        $this->invoiceOrderItem($order, 1);
+        $order->cancel();
+
+        $this->assertEquals(1, (float)current($order->getItems())->getQtyCanceled());
+
+        $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
+        $this->assertEquals(4, $qtyInStock, 'The invoiced unit must not be returned to stock.');
+    }
+
+    /**
+     * @magentoDbIsolation  disabled
+     * @magentoAppIsolation enabled
+     *
+     * @magentoDataFixture MageSuite_DisableStockReservation::Test/Integration/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     */
+    public function testReturnOnlyNotShippedQtyAfterPartiallyShippedOrderCancel(): void
+    {
+        $sku = 'SKU-2';
+        $stockId = 30;
+
+        $cart = $this->getCartByStockId($stockId);
+        $this->addItemToCart($sku, 2, $cart);
+        $orderId = $this->placeOrder($cart);
+
+        $order = $this->orderRepository->get($orderId);
+        $this->shipOrderItem($order, 1);
+        $order->cancel();
+
+        $this->assertEquals(1, (float)current($order->getItems())->getQtyCanceled());
+
+        $qtyInStock = current($this->getSourceItemsBySkuInterface->execute($sku))->getQuantity();
+        $this->assertEquals(4, $qtyInStock, 'The shipped unit must not be returned to stock.');
+    }
 }

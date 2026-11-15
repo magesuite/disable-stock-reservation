@@ -97,6 +97,34 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
         return $cartItem;
     }
 
+    protected function invoiceOrderItem(\Magento\Sales\Model\Order $order, float $qty): void
+    {
+        $orderItem = current($order->getItems());
+        $invoice = $this->objectManager->get(\Magento\Sales\Model\Service\InvoiceService::class)
+            ->prepareInvoice($order, [$orderItem->getId() => $qty]);
+        $invoice->register();
+        $order->setIsInProcess(true);
+
+        $this->objectManager->create(\Magento\Framework\DB\Transaction::class)
+            ->addObject($invoice)
+            ->addObject($order)
+            ->save();
+    }
+
+    protected function shipOrderItem(\Magento\Sales\Model\Order $order, float $qty): void
+    {
+        $convertOrder = $this->objectManager->get(\Magento\Sales\Model\Convert\Order::class);
+        $shipment = $convertOrder->toShipment($order);
+        $shipment->addItem($convertOrder->itemToShipmentItem(current($order->getItems()))->setQty($qty));
+        $shipment->register();
+        $order->setIsInProcess(true);
+
+        $this->objectManager->create(\Magento\Framework\DB\Transaction::class)
+            ->addObject($shipment)
+            ->addObject($order)
+            ->save();
+    }
+
     protected function deleteOrderById(int $orderId): void
     {
         $this->registry->unregister('isSecureArea');
